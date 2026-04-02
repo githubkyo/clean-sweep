@@ -9,5 +9,10 @@ let package = Package(
             name: "CleanSweep",
             path: "Sources"
         ),
+        .testTarget(
+            name: "CleanSweepTests",
+            dependencies: ["CleanSweep"],
+            path: "Tests"
+        ),
     ]
 )

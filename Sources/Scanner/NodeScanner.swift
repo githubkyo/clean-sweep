@@ -61,31 +61,38 @@ struct NodeScanner: CategoryScanner {
 
         // Check for running node processes and their working directories
         if let output = shell.run(["lsof", "-c", "node", "-a", "-d", "cwd", "-Fn"]) {
-            for line in output.split(separator: "\n") where line.hasPrefix("n") {
-                dirs.insert(String(line.dropFirst()))
+            for line in output.split(separator: "\n") where line.hasPrefix("n/") {
+                let path = String(line.dropFirst())
+                // Skip root "/" — some node processes have cwd "/"
+                if path.count > 1 {
+                    dirs.insert(path)
+                }
             }
         }
 
-        // Check for docker-compose projects with running containers
-        if let output = shell.run(["docker", "compose", "ls", "--format", "json"]) {
-            // Each line is JSON: {"Name":"...","Status":"running(N)","ConfigFiles":"/.../docker-compose.yml"}
-            for line in output.split(separator: "\n") {
-                guard let data = line.data(using: .utf8),
-                      let obj = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] ?? {
-                          // Single object fallback
-                          if let single = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                              return [single]
-                          }
-                          return nil
-                      }()
-                else { continue }
-
-                for entry in obj {
-                    guard let status = entry["Status"] as? String, status.contains("running"),
-                          let configFiles = entry["ConfigFiles"] as? String else { continue }
-                    // ConfigFiles is the path to docker-compose.yml — get parent dir
-                    let projectDir = (configFiles as NSString).deletingLastPathComponent
-                    dirs.insert(projectDir)
+        // Check for running Docker containers — extract project names from container names
+        // Container names follow the pattern: projectname-service-N (e.g., "autonomos-worker-1")
+        if let output = shell.run(["docker", "ps", "--format", "{{.Names}}"]) {
+            let containerNames = output.split(separator: "\n").map(String.init)
+            // Extract unique project prefixes (everything before the last two "-service-N" parts)
+            for name in containerNames {
+                let parts = name.split(separator: "-")
+                guard parts.count >= 2 else { continue }
+                // Project name is the first segment(s) before the service name
+                let projectName = String(parts[0])
+                // Match against workspace directories (case-insensitive)
+                let projectDirs = ["\(home)/workspace", "\(home)/Projects", "\(home)/Developer", "\(home)/repos"]
+                for base in projectDirs {
+                    let candidate = "\(base)/\(projectName)"
+                    if FileManager.default.fileExists(atPath: candidate) {
+                        dirs.insert(candidate)
+                    }
+                    // Also try case-insensitive match
+                    if let entries = try? FileManager.default.contentsOfDirectory(atPath: base) {
+                        for entry in entries where entry.lowercased() == projectName.lowercased() {
+                            dirs.insert("\(base)/\(entry)")
+                        }
+                    }
                 }
             }
         }

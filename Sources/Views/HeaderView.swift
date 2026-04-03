@@ -50,7 +50,7 @@ struct HeaderView: View {
                 titleVisibility: .visible
             ) {
                 Button("\(scanner.useTrash ? "ゴミ箱に移動" : "削除")する (\(scanner.result.formattedSelected))", role: .destructive) {
-                    Task { await scanner.deleteSelected() }
+                    scanner.deleteSelected()
                 }
                 Button("キャンセル", role: .cancel) {}
             } message: {

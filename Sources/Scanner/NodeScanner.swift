@@ -27,8 +27,8 @@ struct NodeScanner: CategoryScanner {
             }
         }
 
-        // Detect node_modules in all immediate subdirectories of home
-        // Scan common project directories dynamically
+        let activeProjectDirs = detectActiveProjectDirs()
+
         let projectDirs = ["\(home)/workspace", "\(home)/Projects", "\(home)/Developer", "\(home)/repos"]
         let fm = FileManager.default
         for dir in projectDirs {
@@ -36,18 +36,60 @@ struct NodeScanner: CategoryScanner {
             for project in projects {
                 let nmPath = "\(dir)/\(project)/node_modules"
                 if let size = shell.directorySize(nmPath), size > 100_000_000 {
+                    let projectDir = "\(dir)/\(project)"
+                    let isActive = activeProjectDirs.contains(where: { projectDir.hasPrefix($0) })
                     items.append(StorageItem(
                         name: "\(project)/node_modules",
                         path: nmPath,
                         size: size,
                         category: .nodePackages,
-                        safety: .safe,
-                        detail: "npm install / pnpm install で再生成"
+                        safety: isActive ? .caution : .safe,
+                        detail: isActive
+                            ? "⚠️ プロセス稼働中 — 削除するとサービスが停止します"
+                            : "npm install / pnpm install で再生成"
                     ))
                 }
             }
         }
 
         return items
+    }
+
+    /// Detect project directories that have running Node/Docker processes.
+    private func detectActiveProjectDirs() -> Set<String> {
+        var dirs = Set<String>()
+
+        // Check for running node processes and their working directories
+        if let output = shell.run(["lsof", "-c", "node", "-a", "-d", "cwd", "-Fn"]) {
+            for line in output.split(separator: "\n") where line.hasPrefix("n") {
+                dirs.insert(String(line.dropFirst()))
+            }
+        }
+
+        // Check for docker-compose projects with running containers
+        if let output = shell.run(["docker", "compose", "ls", "--format", "json"]) {
+            // Each line is JSON: {"Name":"...","Status":"running(N)","ConfigFiles":"/.../docker-compose.yml"}
+            for line in output.split(separator: "\n") {
+                guard let data = line.data(using: .utf8),
+                      let obj = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] ?? {
+                          // Single object fallback
+                          if let single = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                              return [single]
+                          }
+                          return nil
+                      }()
+                else { continue }
+
+                for entry in obj {
+                    guard let status = entry["Status"] as? String, status.contains("running"),
+                          let configFiles = entry["ConfigFiles"] as? String else { continue }
+                    // ConfigFiles is the path to docker-compose.yml — get parent dir
+                    let projectDir = (configFiles as NSString).deletingLastPathComponent
+                    dirs.insert(projectDir)
+                }
+            }
+        }
+
+        return dirs
     }
 }

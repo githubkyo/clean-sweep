@@ -1,6 +1,6 @@
 import Foundation
 
-enum DeletionMethod: Sendable {
+enum DeletionMethod: Sendable, Equatable {
     case fileRemoval          // FileManager.removeItem
     case dockerPrune          // docker system prune -f
     case sudoCommand(String)  // Copy command to clipboard

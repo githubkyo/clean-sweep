@@ -38,7 +38,6 @@ final class StorageScanner {
     func scan() async {
         isScanning = true
         result = ScanResult()
-        deleteLog = []
         scanErrors = []
 
         for scanner in scanners {
@@ -58,54 +57,66 @@ final class StorageScanner {
         isScanning = false
     }
 
-    func deleteSelected() async {
-        isDeleting = true
+    func deleteSelected() {
         deleteLog = []
+        isDeleting = true
         let selected = result.items.filter(\.isSelected)
-        var successCount = 0
-        var failCount = 0
 
-        for item in selected {
-            // Check for cancellation
-            if Task.isCancelled {
-                deleteLog.append("中断: 残り\(selected.count - successCount - failCount)件をスキップ")
-                break
-            }
+        deletionTask = Task {
+            var successCount = 0
+            var failCount = 0
+            var dockerPruneExecuted = false
 
-            switch item.deletionMethod {
-            case .fileRemoval:
-                let (success, message) = await deleteFile(item)
-                deleteLog.append(message)
-                if success { successCount += 1 } else { failCount += 1 }
-
-            case .dockerPrune:
-                let pruneResult = await Task.detached { [shell = self.shell] in
-                    shell.run(["docker", "system", "prune", "-a", "--volumes", "-f"])
-                }.value
-                if pruneResult != nil {
-                    deleteLog.append("削除完了: \(item.name) (docker system prune 実行)")
-                    successCount += 1
-                } else {
-                    deleteLog.append("削除失敗: \(item.name) - Docker pruneに失敗")
-                    failCount += 1
+            for item in selected {
+                if Task.isCancelled {
+                    deleteLog.append("中断: 残り\(selected.count - successCount - failCount)件をスキップ")
+                    break
                 }
 
-            case .sudoCommand(let command):
-                NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(command, forType: .string)
-                deleteLog.append("クリップボードにコピー: \(item.name) → ターミナルで貼り付けて実行してください")
-                successCount += 1
+                switch item.deletionMethod {
+                case .fileRemoval:
+                    let trash = useTrash
+                    let (success, message) = await Task.detached {
+                        Self.performFileDeletion(item, useTrash: trash)
+                    }.value
+                    deleteLog.append(message)
+                    if success { successCount += 1 } else { failCount += 1 }
+
+                case .dockerPrune:
+                    if dockerPruneExecuted {
+                        // prune is global — only run once per deletion batch
+                        deleteLog.append("スキップ: \(item.name)（pruneは実行済み）")
+                        successCount += 1
+                        continue
+                    }
+                    dockerPruneExecuted = true
+                    let dockerItems = selected.filter { $0.deletionMethod == .dockerPrune }
+                    let names = dockerItems.map(\.name).joined(separator: ", ")
+                    let (pruneSuccess, pruneMessage) = await Task.detached { [shell = self.shell] in
+                        Self.performDockerPrune(shell: shell, itemName: names)
+                    }.value
+                    deleteLog.append(pruneMessage)
+                    if pruneSuccess { successCount += 1 } else { failCount += 1 }
+
+                case .sudoCommand(let command):
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(command, forType: .string)
+                    deleteLog.append("クリップボードにコピー: \(item.name) → ターミナルで貼り付けて実行してください")
+                    successCount += 1
+                }
             }
+
+            deleteLog.append("--- 完了: \(successCount)件成功, \(failCount)件失敗 ---")
+
+            // Re-scan without clearing deleteLog
+            await scan()
+            isDeleting = false
         }
-
-        deleteLog.append("--- 完了: \(successCount)件成功, \(failCount)件失敗 ---")
-
-        await scan()
-        isDeleting = false
     }
 
     func cancelDeletion() {
         deletionTask?.cancel()
+        deletionTask = nil
     }
 
     func toggleItem(_ id: UUID) {
@@ -127,7 +138,8 @@ final class StorageScanner {
 
     // MARK: - Private
 
-    private func deleteFile(_ item: StorageItem) async -> (Bool, String) {
+    /// Perform file deletion off the main thread to avoid UI freezes on large directories.
+    private nonisolated static func performFileDeletion(_ item: StorageItem, useTrash: Bool) -> (Bool, String) {
         let fm = FileManager.default
         guard fm.fileExists(atPath: item.path) else {
             return (false, "スキップ: \(item.name)（パスが存在しない）")
@@ -135,7 +147,6 @@ final class StorageScanner {
 
         do {
             if useTrash {
-                // Move to Trash — user can recover from Finder
                 try fm.trashItem(at: URL(filePath: item.path), resultingItemURL: nil)
                 return (true, "ゴミ箱に移動: \(item.name) (\(item.formattedSize))")
             } else {
@@ -145,5 +156,24 @@ final class StorageScanner {
         } catch {
             return (false, "削除失敗: \(item.name) - \(error.localizedDescription)")
         }
+    }
+
+    /// Parse docker prune output to verify actual reclamation.
+    private nonisolated static func performDockerPrune(shell: ShellExecuting, itemName: String) -> (Bool, String) {
+        guard let output = shell.run(["docker", "system", "prune", "-a", "--volumes", "-f"]) else {
+            return (false, "削除失敗: \(itemName) - Docker pruneに失敗（Dockerが起動しているか確認してください）")
+        }
+
+        // docker system prune output ends with "Total reclaimed space: X.XXGB"
+        let lines = output.split(separator: "\n")
+        if let reclaimedLine = lines.last(where: { $0.contains("reclaimed space") }) {
+            let reclaimed = reclaimedLine.trimmingCharacters(in: .whitespaces)
+            if reclaimed.hasSuffix("0B") {
+                return (false, "スキップ: \(itemName) - 回収可能な領域なし（使用中のリソースは削除できません）")
+            }
+            return (true, "削除完了: \(itemName) (\(reclaimed))")
+        }
+
+        return (true, "削除完了: \(itemName) (docker system prune 実行)")
     }
 }

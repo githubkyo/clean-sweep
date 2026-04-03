@@ -12,6 +12,7 @@ struct DockerScanner: CategoryScanner {
 
     func scan() async -> [StorageItem] {
         var items: [StorageItem] = []
+        let hasRunningContainers = shell.run(["docker", "ps", "-q"]).map { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } ?? false
 
         if let output = shell.run(["docker", "system", "df", "--format", "{{.Type}}\t{{.Size}}\t{{.Reclaimable}}"]) {
             for line in output.split(separator: "\n") {
@@ -21,13 +22,17 @@ struct DockerScanner: CategoryScanner {
                 let bytes = Self.parseDockerSize(String(parts[2]))
                 guard bytes > 10_000_000 else { continue }
 
+                // Volumes/Containers used by running containers can't be pruned
+                let isInUseType = hasRunningContainers && (typeName == "Local Volumes" || typeName == "Containers")
                 items.append(StorageItem(
                     name: "Docker \(typeName) (回収可能)",
-                    path: "docker-prune",  // Special marker for docker prune
+                    path: "docker-prune",
                     size: bytes,
                     category: .docker,
-                    safety: .safe,
-                    detail: "docker system prune で削除",
+                    safety: isInUseType ? .caution : .safe,
+                    detail: isInUseType
+                        ? "⚠️ 稼働中コンテナあり — 使用中のリソースは削除されません"
+                        : "docker system prune で削除",
                     deletionMethod: .dockerPrune
                 ))
             }

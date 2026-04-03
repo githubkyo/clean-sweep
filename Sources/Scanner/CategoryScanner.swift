@@ -27,9 +27,12 @@ struct ShellExecutor: ShellExecuting, Sendable {
 
         do {
             try process.run()
+            // Read stdout BEFORE waitUntilExit to avoid pipe buffer deadlock.
+            // If the child writes more than the pipe buffer (~64KB), it blocks
+            // on write — and waitUntilExit would never return.
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             process.waitUntilExit()
             guard process.terminationStatus == 0 else { return nil }
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             return String(data: data, encoding: .utf8)
         } catch {
             return nil

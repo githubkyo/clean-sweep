@@ -65,6 +65,7 @@ final class StorageScanner {
         deletionTask = Task {
             var successCount = 0
             var failCount = 0
+            var dockerPruneExecuted = false
 
             for item in selected {
                 if Task.isCancelled {
@@ -82,8 +83,17 @@ final class StorageScanner {
                     if success { successCount += 1 } else { failCount += 1 }
 
                 case .dockerPrune:
+                    if dockerPruneExecuted {
+                        // prune is global — only run once per deletion batch
+                        deleteLog.append("スキップ: \(item.name)（pruneは実行済み）")
+                        successCount += 1
+                        continue
+                    }
+                    dockerPruneExecuted = true
+                    let dockerItems = selected.filter { $0.deletionMethod == .dockerPrune }
+                    let names = dockerItems.map(\.name).joined(separator: ", ")
                     let (pruneSuccess, pruneMessage) = await Task.detached { [shell = self.shell] in
-                        Self.performDockerPrune(shell: shell, itemName: item.name)
+                        Self.performDockerPrune(shell: shell, itemName: names)
                     }.value
                     deleteLog.append(pruneMessage)
                     if pruneSuccess { successCount += 1 } else { failCount += 1 }

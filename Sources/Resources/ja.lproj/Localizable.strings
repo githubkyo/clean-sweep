@@ -1,0 +1,145 @@
+/* Categories */
+"category.docker" = "Docker";
+"category.xcode" = "Xcode";
+"category.node" = "Node.js";
+"category.flutter" = "Flutter";
+"category.gradle" = "Gradle";
+"category.aiTools" = "AIツール";
+"category.systemCaches" = "システムキャッシュ";
+"category.apfsSnapshots" = "APFSスナップショット";
+"category.tmpFiles" = "一時ファイル";
+
+/* Safety Levels */
+"safety.safe" = "安全";
+"safety.caution" = "注意";
+"safety.dangerous" = "危険";
+"safety.safe.description" = "削除しても再生成される";
+"safety.caution.description" = "削除前に確認推奨";
+"safety.dangerous.description" = "削除するとデータ損失の可能性";
+
+/* ContentView */
+"cleanup.complete" = "クリーンアップ完了";
+"scan.prompt" = "「スキャン」を押してストレージを分析";
+"permission.guide.show" = "権限設定ガイドを表示";
+"fda.warning" = "フルディスクアクセスが未設定 — 一部のディレクトリがスキャンできない可能性があります";
+"settings" = "設定";
+
+/* HeaderView */
+"header.total.help" = "回収可能な合計サイズ";
+"header.selected.help" = "選択中の合計サイズ";
+"header.trash.toggle" = "ゴミ箱に移動";
+"header.trash.help.on" = "ファイルをゴミ箱に移動（復元可能）";
+"header.trash.help.off" = "ファイルを完全削除（復元不可）";
+"header.scan" = "スキャン";
+"header.trash.button" = "ゴミ箱へ";
+"header.delete.button" = "削除";
+"header.confirm.trash" = "選択した項目をゴミ箱に移動しますか？";
+"header.confirm.delete" = "選択した項目を完全に削除しますか？";
+"header.confirm.action.trash" = "ゴミ箱に移動する (%@)";
+"header.confirm.action.delete" = "削除する (%@)";
+"header.cancel" = "キャンセル";
+"header.warning.danger" = "危険レベルの項目が%d件含まれています。削除するとデータ損失の可能性があります。";
+"header.info.trash" = "%d件の項目をゴミ箱に移動します。Finderから復元できます。";
+"header.info.delete" = "%d件の項目を完全に削除します。この操作は取り消せません。";
+
+/* StorageItemRow */
+"item.sudo.help" = "sudo権限が必要 — 削除時にコマンドをクリップボードにコピー";
+"item.docker.help" = "docker system prune を実行";
+"item.size.unknown" = "不明";
+
+/* CategorySectionView */
+"category.items.count" = "%d件";
+
+/* PermissionGuideView */
+"permission.title" = "フルディスクアクセスが必要です";
+"permission.description" = "CleanSweepがシステムディレクトリ（/private/tmp、Xcodeキャッシュ等）をスキャンするには、フルディスクアクセス権限が必要です。";
+"permission.step1" = "「システム設定」を開く";
+"permission.step2" = "「プライバシーとセキュリティ」→「フルディスクアクセス」";
+"permission.step3" = "「CleanSweep」をオンにする";
+"permission.open" = "システム設定を開く";
+"permission.later" = "後で設定する";
+
+/* StorageScanner */
+"scanner.scanning" = "%@ をスキャン中...";
+"scanner.cancelled" = "中断: 残り%d件をスキップ";
+"scanner.skipped.pruned" = "スキップ: %@（pruneは実行済み）";
+"scanner.clipboard" = "クリップボードにコピー: %@ → ターミナルで貼り付けて実行してください";
+"scanner.summary" = "--- 完了: %d件成功, %d件失敗 ---";
+"scanner.path.missing" = "スキップ: %@（パスが存在しない）";
+"scanner.trash.success" = "ゴミ箱に移動: %@ (%@)";
+"scanner.delete.success" = "削除完了: %@ (%@)";
+"scanner.delete.failure" = "削除失敗: %@ - %@";
+"scanner.docker.failure" = "削除失敗: %@ - Docker pruneに失敗（Dockerが起動しているか確認してください）";
+"scanner.docker.nospace" = "スキップ: %@ - 回収可能な領域なし（使用中のリソースは削除できません）";
+"scanner.docker.success.detail" = "削除完了: %@ (%@)";
+"scanner.docker.success" = "削除完了: %@ (docker system prune 実行)";
+
+/* Docker Scanner */
+"docker.reclaimable" = "Docker %@ (回収可能)";
+"docker.running.detail" = "⚠️ 稼働中コンテナあり — 使用中のリソースは削除されません";
+"docker.prune.detail" = "docker system prune で削除";
+"docker.disk.name" = "Docker ディスクイメージ";
+"docker.disk.detail" = "Docker全体のディスクイメージ（削除でDocker再セットアップ必要）";
+
+/* Xcode Scanner */
+"xcode.derived" = "Xcode DerivedData";
+"xcode.derived.detail" = "ビルドキャッシュ（ビルド時に再生成）";
+"xcode.archives" = "Xcode Archives";
+"xcode.archives.detail" = "過去のアーカイブ（App Store提出済みなら不要）";
+"xcode.device" = "iOS DeviceSupport";
+"xcode.device.detail" = "デバイスシンボル（接続時に再DL）";
+"xcode.simulator" = "iOS Simulator";
+"xcode.simulator.detail" = "シミュレータデータ";
+
+/* Node Scanner */
+"node.npm" = "npm キャッシュ";
+"node.npm.detail" = "npm cache clean --force で再生成";
+"node.yarn" = "Yarn キャッシュ";
+"node.yarn.detail" = "yarn cache clean で再生成";
+"node.pnpm.store" = "pnpm ストア";
+"node.pnpm.store.detail" = "pnpm store prune で最適化";
+"node.pnpm.cache" = "pnpm キャッシュ";
+"node.pnpm.cache.detail" = "パッケージキャッシュ";
+"node.nvm" = "nvm (Node バージョン)";
+"node.nvm.detail" = "未使用バージョンを削除可能";
+"node.active.detail" = "⚠️ プロセス稼働中 — 削除するとサービスが停止します";
+"node.modules.detail" = "npm install / pnpm install で再生成";
+
+/* Flutter Scanner */
+"flutter.pub" = "Flutter pub キャッシュ";
+"flutter.pub.detail" = "dart pub cache repair で再生成";
+"flutter.cocoapods" = "CocoaPods キャッシュ";
+"flutter.cocoapods.detail" = "pod cache clean --all で再生成";
+
+/* Gradle Scanner */
+"gradle.cache" = "Gradle キャッシュ";
+"gradle.cache.detail" = "ビルド依存関係キャッシュ（ビルド時に再DL）";
+
+/* AI Tools Scanner */
+"ai.claude.code" = "Claude Code: %@";
+"ai.claude.code.detail" = "ワークツリーと実行結果の一時データ";
+"ai.claude.desktop" = "Claude Desktop データ";
+"ai.claude.desktop.detail" = "会話履歴等";
+"ai.claude.update" = "Claude Desktop 更新キャッシュ";
+"ai.claude.update.detail" = "アップデートキャッシュ";
+"ai.cursor" = "Cursor データ";
+"ai.cursor.detail" = "設定・拡張データ";
+
+/* System Cache Scanner */
+"cache.chrome" = "Google Chrome キャッシュ";
+"cache.chrome.detail" = "ブラウザキャッシュ";
+"cache.homebrew" = "Homebrew キャッシュ";
+"cache.homebrew.detail" = "brew cleanup で削除可能";
+"cache.vscode" = "VS Code 更新キャッシュ";
+"cache.vscode.detail" = "アップデートキャッシュ";
+"cache.playwright" = "Playwright ブラウザ";
+"cache.playwright.detail" = "テスト用ブラウザバイナリ";
+"cache.pip" = "pip キャッシュ";
+"cache.pip.detail" = "Pythonパッケージキャッシュ";
+
+/* Tmp File Scanner */
+"tmp.detail" = "一時ファイル";
+
+/* APFS Snapshot Scanner */
+"apfs.snapshot" = "スナップショット: %@";
+"apfs.snapshot.detail" = "sudo権限が必要（コマンドをクリップボードにコピー）";

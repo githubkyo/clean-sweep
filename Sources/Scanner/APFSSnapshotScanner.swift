@@ -31,12 +31,12 @@ struct APFSSnapshotScanner: CategoryScanner {
                 let displayName = name.count > 50 ? String(name.prefix(50)) + "..." : name
                 let command = "sudo tmutil deletelocalsnapshots \(name)"
                 items.append(StorageItem(
-                    name: "スナップショット: \(displayName)",
+                    name: L("apfs.snapshot", displayName),
                     path: name,
                     size: 0,
                     category: .apfsSnapshots,
                     safety: .caution,
-                    detail: "sudo権限が必要（コマンドをクリップボードにコピー）",
+                    detail: L("apfs.snapshot.detail"),
                     deletionMethod: .sudoCommand(command)
                 ))
                 currentName = nil

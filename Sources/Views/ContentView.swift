@@ -23,7 +23,7 @@ struct ContentView: View {
                     Image(systemName: "checkmark.circle")
                         .font(.system(size: 48))
                         .foregroundStyle(.green)
-                    Text("クリーンアップ完了")
+                    Text(L("cleanup.complete"))
                         .foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -32,11 +32,11 @@ struct ContentView: View {
                     Image(systemName: "magnifyingglass")
                         .font(.system(size: 48))
                         .foregroundStyle(.secondary)
-                    Text("「スキャン」を押してストレージを分析")
+                    Text(L("scan.prompt"))
                         .foregroundStyle(.secondary)
 
                     if !PermissionChecker.hasFullDiskAccess() {
-                        Button("権限設定ガイドを表示") {
+                        Button(L("permission.guide.show")) {
                             showPermissionGuide = true
                         }
                         .buttonStyle(.link)
@@ -51,10 +51,10 @@ struct ContentView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .foregroundStyle(.orange)
-                            Text("フルディスクアクセスが未設定 — 一部のディレクトリがスキャンできない可能性があります")
+                            Text(L("fda.warning"))
                                 .font(.caption)
                             Spacer()
-                            Button("設定") { showPermissionGuide = true }
+                            Button(L("settings")) { showPermissionGuide = true }
                                 .font(.caption)
                         }
                         .padding(8)

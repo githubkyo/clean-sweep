@@ -1,17 +1,21 @@
 import SwiftUI
 
 enum StorageCategory: String, CaseIterable, Identifiable, Sendable {
-    case docker = "Docker"
-    case xcode = "Xcode"
-    case nodePackages = "Node.js"
-    case flutter = "Flutter"
-    case gradle = "Gradle"
-    case aiTools = "AIツール"
-    case systemCaches = "システムキャッシュ"
-    case apfsSnapshots = "APFSスナップショット"
-    case tmpFiles = "一時ファイル"
+    case docker
+    case xcode
+    case nodePackages = "node"
+    case flutter
+    case gradle
+    case aiTools
+    case systemCaches
+    case apfsSnapshots
+    case tmpFiles
 
     var id: String { rawValue }
+
+    var localizedName: String {
+        L("category.\(rawValue)")
+    }
 
     var icon: String {
         switch self {

@@ -25,14 +25,14 @@ struct DockerScanner: CategoryScanner {
                 // Volumes/Containers used by running containers can't be pruned
                 let isInUseType = hasRunningContainers && (typeName == "Local Volumes" || typeName == "Containers")
                 items.append(StorageItem(
-                    name: "Docker \(typeName) (回収可能)",
+                    name: L("docker.reclaimable", typeName),
                     path: "docker-prune",
                     size: bytes,
                     category: .docker,
                     safety: isInUseType ? .caution : .safe,
                     detail: isInUseType
-                        ? "⚠️ 稼働中コンテナあり — 使用中のリソースは削除されません"
-                        : "docker system prune で削除",
+                        ? L("docker.running.detail")
+                        : L("docker.prune.detail"),
                     deletionMethod: .dockerPrune
                 ))
             }
@@ -41,12 +41,12 @@ struct DockerScanner: CategoryScanner {
         let dockerPath = "\(home)/Library/Containers/com.docker.docker"
         if let size = shell.directorySize(dockerPath) {
             items.append(StorageItem(
-                name: "Docker ディスクイメージ",
+                name: L("docker.disk.name"),
                 path: dockerPath,
                 size: size,
                 category: .docker,
                 safety: .dangerous,
-                detail: "Docker全体のディスクイメージ（削除でDocker再セットアップ必要）"
+                detail: L("docker.disk.detail")
             ))
         }
 

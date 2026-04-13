@@ -12,11 +12,11 @@ struct SystemCacheScanner: CategoryScanner {
 
     func scan() async -> [StorageItem] {
         let targets: [(String, String, SafetyLevel, String)] = [
-            ("\(home)/Library/Caches/Google", "Google Chrome キャッシュ", .safe, "ブラウザキャッシュ"),
-            ("\(home)/Library/Caches/Homebrew", "Homebrew キャッシュ", .safe, "brew cleanup で削除可能"),
-            ("\(home)/Library/Caches/com.microsoft.VSCode.ShipIt", "VS Code 更新キャッシュ", .safe, "アップデートキャッシュ"),
-            ("\(home)/Library/Caches/ms-playwright", "Playwright ブラウザ", .safe, "テスト用ブラウザバイナリ"),
-            ("\(home)/Library/Caches/pip", "pip キャッシュ", .safe, "Pythonパッケージキャッシュ"),
+            ("\(home)/Library/Caches/Google", L("cache.chrome"), .safe, L("cache.chrome.detail")),
+            ("\(home)/Library/Caches/Homebrew", L("cache.homebrew"), .safe, L("cache.homebrew.detail")),
+            ("\(home)/Library/Caches/com.microsoft.VSCode.ShipIt", L("cache.vscode"), .safe, L("cache.vscode.detail")),
+            ("\(home)/Library/Caches/ms-playwright", L("cache.playwright"), .safe, L("cache.playwright.detail")),
+            ("\(home)/Library/Caches/pip", L("cache.pip"), .safe, L("cache.pip.detail")),
         ]
 
         return targets.compactMap { path, name, safety, detail in

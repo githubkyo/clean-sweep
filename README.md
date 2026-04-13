@@ -1,72 +1,75 @@
 # CleanSweep
 
-macOS開発者向けストレージクリーナー。Docker/Xcode/npm/Gradle/AIツール等の隠れた巨大ファイルを検出し、安全に削除できるネイティブアプリ。
+[日本語](README.ja.md) | English
 
-## 特徴
+A native macOS storage cleaner for developers. Detects hidden large files from Docker, Xcode, npm, Gradle, AI tools, and more — and safely removes them.
 
-- **開発者ツール特化** — Docker、Xcode DerivedData、npm/yarn/pnpmキャッシュ、Gradle、Flutter、CocoaPods
-- **AIツール対応** — Claude Code一時ファイル、Claude Desktop、Cursorデータ
-- **システム深層スキャン** — APFSスナップショット、/private/tmp、システムキャッシュ
-- **安全度スコア** — 安全/注意/危険の3段階で色分け表示
-- **ゴミ箱移動** — デフォルトでゴミ箱に移動（Finderから復元可能）
-- **sudo対応** — APFSスナップショット等はコマンドをクリップボードにコピー
+## Features
 
-## 必要環境
+- **Developer-tool focused** — Docker, Xcode DerivedData, npm/yarn/pnpm caches, Gradle, Flutter, CocoaPods
+- **AI tools support** — Claude Code temp files, Claude Desktop, Cursor data
+- **Deep system scan** — APFS snapshots, /private/tmp, system caches
+- **Safety ratings** — Color-coded 3-level system: Safe / Caution / Danger
+- **Trash by default** — Moves to Trash (recoverable from Finder)
+- **sudo support** — For APFS snapshots, copies the command to clipboard
+- **Localized** — Japanese and English
 
-- macOS 14 (Sonoma) 以上
+## Requirements
+
+- macOS 14 (Sonoma) or later
 - Swift 6.2+ / Xcode 16+
-- フルディスクアクセス権限（推奨）
+- Full Disk Access permission (recommended)
 
-## インストール
+## Installation
 
-### Homebrew（予定）
+### Homebrew (planned)
 ```bash
 brew install --cask cleansweep
 ```
 
-### DMGダウンロード
-[Releases](../../releases) ページから最新の `.dmg` をダウンロード
+### DMG Download
+Download the latest `.dmg` from the [Releases](../../releases) page.
 
-### ソースからビルド
+### Build from Source
 ```bash
 git clone https://github.com/your-username/clean-sweep.git
 cd clean-sweep
 make run
 ```
 
-## 使い方
+## Usage
 
-1. CleanSweepを起動
-2. フルディスクアクセスを設定（初回のみ — アプリ内ガイドあり）
-3. 「スキャン」ボタンを押す
-4. 安全な項目は自動選択される
-5. 確認して「ゴミ箱へ」を押す
+1. Launch CleanSweep
+2. Grant Full Disk Access (first time only — in-app guide provided)
+3. Click "Scan"
+4. Safe items are auto-selected
+5. Review and click "Trash" to clean up
 
-## ビルド
+## Build
 
 ```bash
-make build    # リリースビルド
-make test     # テスト実行
-make app      # .appバンドル作成
-make sign     # ad-hoc署名
-make dmg      # DMG作成
-make run      # ビルド＆起動
+make build    # Release build
+make test     # Run tests
+make app      # Create .app bundle
+make sign     # Ad-hoc signing
+make dmg      # Create DMG
+make run      # Build & launch
 ```
 
-## スキャン対象
+## Scan Targets
 
-| カテゴリ | 対象 | デフォルト安全度 |
-|---------|------|----------------|
-| Docker | 未使用イメージ/ボリューム/ビルドキャッシュ | 安全 |
-| Xcode | DerivedData, Archives, DeviceSupport, Simulator | 安全〜注意 |
-| Node.js | npm/yarn/pnpmキャッシュ, node_modules | 安全 |
-| Flutter | pub-cache, CocoaPods | 安全 |
-| Gradle | .gradleキャッシュ | 安全 |
-| AIツール | Claude Code一時ファイル, Claude Desktop | 安全〜注意 |
-| システムキャッシュ | Chrome, Homebrew, VS Code, pip | 安全 |
-| 一時ファイル | /private/tmp (100MB以上) | 注意 |
-| APFSスナップショット | OS更新用スナップショット | 注意 |
+| Category | Targets | Default Safety |
+|----------|---------|----------------|
+| Docker | Unused images/volumes/build cache | Safe |
+| Xcode | DerivedData, Archives, DeviceSupport, Simulator | Safe–Caution |
+| Node.js | npm/yarn/pnpm caches, node_modules | Safe |
+| Flutter | pub-cache, CocoaPods | Safe |
+| Gradle | .gradle cache | Safe |
+| AI Tools | Claude Code temp files, Claude Desktop | Safe–Caution |
+| System Caches | Chrome, Homebrew, VS Code, pip | Safe |
+| Temp Files | /private/tmp (over 100MB) | Caution |
+| APFS Snapshots | OS update snapshots | Caution |
 
-## ライセンス
+## License
 
 MIT License

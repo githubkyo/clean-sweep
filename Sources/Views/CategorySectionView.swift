@@ -34,10 +34,10 @@ struct CategorySectionView: View {
                     .frame(width: 20)
                     .foregroundStyle(.blue)
 
-                Text(category.rawValue)
+                Text(category.localizedName)
                     .font(.headline)
 
-                Text("\(items.count)件")
+                Text(L("category.items.count", items.count))
                     .font(.caption)
                     .foregroundStyle(.secondary)
 

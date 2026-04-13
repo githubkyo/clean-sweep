@@ -1,6 +1,6 @@
 APP_NAME = CleanSweep
 BUNDLE_ID = com.cleansweep.app
-VERSION = 1.0.0
+VERSION = 1.1.0
 BUILD_DIR = .build/release
 APP_BUNDLE = $(BUILD_DIR)/$(APP_NAME).app
 DMG_NAME = $(APP_NAME)-$(VERSION).dmg

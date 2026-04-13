@@ -22,7 +22,7 @@ struct TmpFileScanner: CategoryScanner {
                 size: size,
                 category: .tmpFiles,
                 safety: .caution,
-                detail: "一時ファイル"
+                detail: L("tmp.detail")
             )
         }
     }

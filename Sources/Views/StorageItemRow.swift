@@ -22,12 +22,12 @@ struct StorageItemRow: View {
                         Image(systemName: "doc.on.clipboard")
                             .font(.caption)
                             .foregroundStyle(.orange)
-                            .help("sudo権限が必要 — 削除時にコマンドをクリップボードにコピー")
+                            .help(L("item.sudo.help"))
                     } else if case .dockerPrune = item.deletionMethod {
                         Image(systemName: "terminal")
                             .font(.caption)
                             .foregroundStyle(.blue)
-                            .help("docker system prune を実行")
+                            .help(L("item.docker.help"))
                     }
                 }
                 Text(item.detail)
@@ -37,7 +37,7 @@ struct StorageItemRow: View {
 
             Spacer()
 
-            Text(item.safety.rawValue)
+            Text(item.safety.localizedName)
                 .font(.caption.bold())
                 .padding(.horizontal, 8)
                 .padding(.vertical, 2)
@@ -49,7 +49,7 @@ struct StorageItemRow: View {
                     .font(.body.monospacedDigit())
                     .frame(width: 80, alignment: .trailing)
             } else {
-                Text("不明")
+                Text(L("item.size.unknown"))
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .frame(width: 80, alignment: .trailing)

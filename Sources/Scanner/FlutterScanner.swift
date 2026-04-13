@@ -12,8 +12,8 @@ struct FlutterScanner: CategoryScanner {
 
     func scan() async -> [StorageItem] {
         let targets: [(String, String, SafetyLevel, String)] = [
-            ("\(home)/.pub-cache", "Flutter pub キャッシュ", .safe, "dart pub cache repair で再生成"),
-            ("\(home)/Library/Caches/CocoaPods", "CocoaPods キャッシュ", .safe, "pod cache clean --all で再生成"),
+            ("\(home)/.pub-cache", L("flutter.pub"), .safe, L("flutter.pub.detail")),
+            ("\(home)/Library/Caches/CocoaPods", L("flutter.cocoapods"), .safe, L("flutter.cocoapods.detail")),
         ]
 
         return targets.compactMap { path, name, safety, detail in

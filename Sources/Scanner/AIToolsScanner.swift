@@ -25,21 +25,21 @@ struct AIToolsScanner: CategoryScanner {
                 let fullPath = "\(claudeTmpPath)/\(entry)"
                 if let size = shell.directorySize(fullPath), size > 50_000_000 {
                     items.append(StorageItem(
-                        name: "Claude Code: \(entry)",
+                        name: L("ai.claude.code", entry),
                         path: fullPath,
                         size: size,
                         category: .aiTools,
                         safety: .safe,
-                        detail: "ワークツリーと実行結果の一時データ"
+                        detail: L("ai.claude.code.detail")
                     ))
                 }
             }
         }
 
         let otherTargets: [(String, String, SafetyLevel, String)] = [
-            ("\(home)/Library/Application Support/Claude", "Claude Desktop データ", .caution, "会話履歴等"),
-            ("\(home)/Library/Caches/com.anthropic.claudefordesktop.ShipIt", "Claude Desktop 更新キャッシュ", .safe, "アップデートキャッシュ"),
-            ("\(home)/Library/Application Support/Cursor", "Cursor データ", .caution, "設定・拡張データ"),
+            ("\(home)/Library/Application Support/Claude", L("ai.claude.desktop"), .caution, L("ai.claude.desktop.detail")),
+            ("\(home)/Library/Caches/com.anthropic.claudefordesktop.ShipIt", L("ai.claude.update"), .safe, L("ai.claude.update.detail")),
+            ("\(home)/Library/Application Support/Cursor", L("ai.cursor"), .caution, L("ai.cursor.detail")),
         ]
 
         for (path, name, safety, detail) in otherTargets {

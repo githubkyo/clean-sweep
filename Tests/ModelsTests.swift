@@ -13,9 +13,9 @@ struct ModelsTests {
     // CE-002
     @Test("SafetyLevelは3レベル")
     func safetyLevelCases() {
-        #expect(SafetyLevel.safe.rawValue == "安全")
-        #expect(SafetyLevel.caution.rawValue == "注意")
-        #expect(SafetyLevel.dangerous.rawValue == "危険")
+        #expect(SafetyLevel.safe.rawValue == "safe")
+        #expect(SafetyLevel.caution.rawValue == "caution")
+        #expect(SafetyLevel.dangerous.rawValue == "dangerous")
     }
 
     // CE-003
@@ -105,7 +105,7 @@ struct ModelsTests {
     @Test("全安全度レベルに説明がある")
     func allSafetyLevelsHaveDescriptions() {
         for level in [SafetyLevel.safe, .caution, .dangerous] {
-            #expect(!level.description.isEmpty)
+            #expect(!level.localizedDescription.isEmpty)
         }
     }
 

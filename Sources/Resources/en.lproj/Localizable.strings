@@ -1,0 +1,145 @@
+/* Categories */
+"category.docker" = "Docker";
+"category.xcode" = "Xcode";
+"category.node" = "Node.js";
+"category.flutter" = "Flutter";
+"category.gradle" = "Gradle";
+"category.aiTools" = "AI Tools";
+"category.systemCaches" = "System Caches";
+"category.apfsSnapshots" = "APFS Snapshots";
+"category.tmpFiles" = "Temporary Files";
+
+/* Safety Levels */
+"safety.safe" = "Safe";
+"safety.caution" = "Caution";
+"safety.dangerous" = "Danger";
+"safety.safe.description" = "Will be regenerated after deletion";
+"safety.caution.description" = "Review before deleting";
+"safety.dangerous.description" = "Potential data loss if deleted";
+
+/* ContentView */
+"cleanup.complete" = "Cleanup Complete";
+"scan.prompt" = "Press \"Scan\" to analyze storage";
+"permission.guide.show" = "Show Permission Guide";
+"fda.warning" = "Full Disk Access not configured — some directories may not be scannable";
+"settings" = "Settings";
+
+/* HeaderView */
+"header.total.help" = "Total reclaimable size";
+"header.selected.help" = "Selected size";
+"header.trash.toggle" = "Move to Trash";
+"header.trash.help.on" = "Move files to Trash (recoverable)";
+"header.trash.help.off" = "Permanently delete files (unrecoverable)";
+"header.scan" = "Scan";
+"header.trash.button" = "Trash";
+"header.delete.button" = "Delete";
+"header.confirm.trash" = "Move selected items to Trash?";
+"header.confirm.delete" = "Permanently delete selected items?";
+"header.confirm.action.trash" = "Move to Trash (%@)";
+"header.confirm.action.delete" = "Delete (%@)";
+"header.cancel" = "Cancel";
+"header.warning.danger" = "%d dangerous item(s) included. Deleting may cause data loss.";
+"header.info.trash" = "Moving %d item(s) to Trash. You can restore them from Finder.";
+"header.info.delete" = "Permanently deleting %d item(s). This cannot be undone.";
+
+/* StorageItemRow */
+"item.sudo.help" = "Requires sudo — command will be copied to clipboard on delete";
+"item.docker.help" = "Runs docker system prune";
+"item.size.unknown" = "Unknown";
+
+/* CategorySectionView */
+"category.items.count" = "%d items";
+
+/* PermissionGuideView */
+"permission.title" = "Full Disk Access Required";
+"permission.description" = "CleanSweep needs Full Disk Access to scan system directories (/private/tmp, Xcode caches, etc.).";
+"permission.step1" = "Open \"System Settings\"";
+"permission.step2" = "\"Privacy & Security\" → \"Full Disk Access\"";
+"permission.step3" = "Enable \"CleanSweep\"";
+"permission.open" = "Open System Settings";
+"permission.later" = "Set Up Later";
+
+/* StorageScanner */
+"scanner.scanning" = "Scanning %@...";
+"scanner.cancelled" = "Cancelled: skipped %d remaining item(s)";
+"scanner.skipped.pruned" = "Skipped: %@ (already pruned)";
+"scanner.clipboard" = "Copied to clipboard: %@ → paste and run in Terminal";
+"scanner.summary" = "--- Done: %d succeeded, %d failed ---";
+"scanner.path.missing" = "Skipped: %@ (path not found)";
+"scanner.trash.success" = "Moved to Trash: %@ (%@)";
+"scanner.delete.success" = "Deleted: %@ (%@)";
+"scanner.delete.failure" = "Failed to delete: %@ - %@";
+"scanner.docker.failure" = "Failed to delete: %@ - Docker prune failed (is Docker running?)";
+"scanner.docker.nospace" = "Skipped: %@ - no reclaimable space (in-use resources cannot be removed)";
+"scanner.docker.success.detail" = "Deleted: %@ (%@)";
+"scanner.docker.success" = "Deleted: %@ (docker system prune executed)";
+
+/* Docker Scanner */
+"docker.reclaimable" = "Docker %@ (reclaimable)";
+"docker.running.detail" = "⚠️ Running containers — in-use resources won't be removed";
+"docker.prune.detail" = "Remove with docker system prune";
+"docker.disk.name" = "Docker Disk Image";
+"docker.disk.detail" = "Full Docker disk image (deletion requires Docker re-setup)";
+
+/* Xcode Scanner */
+"xcode.derived" = "Xcode DerivedData";
+"xcode.derived.detail" = "Build cache (regenerated on build)";
+"xcode.archives" = "Xcode Archives";
+"xcode.archives.detail" = "Past archives (safe to delete if already submitted to App Store)";
+"xcode.device" = "iOS DeviceSupport";
+"xcode.device.detail" = "Device symbols (re-downloaded on connect)";
+"xcode.simulator" = "iOS Simulator";
+"xcode.simulator.detail" = "Simulator data";
+
+/* Node Scanner */
+"node.npm" = "npm Cache";
+"node.npm.detail" = "Regenerate with npm cache clean --force";
+"node.yarn" = "Yarn Cache";
+"node.yarn.detail" = "Regenerate with yarn cache clean";
+"node.pnpm.store" = "pnpm Store";
+"node.pnpm.store.detail" = "Optimize with pnpm store prune";
+"node.pnpm.cache" = "pnpm Cache";
+"node.pnpm.cache.detail" = "Package cache";
+"node.nvm" = "nvm (Node Versions)";
+"node.nvm.detail" = "Unused versions can be removed";
+"node.active.detail" = "⚠️ Process running — deleting will stop the service";
+"node.modules.detail" = "Regenerate with npm install / pnpm install";
+
+/* Flutter Scanner */
+"flutter.pub" = "Flutter pub Cache";
+"flutter.pub.detail" = "Regenerate with dart pub cache repair";
+"flutter.cocoapods" = "CocoaPods Cache";
+"flutter.cocoapods.detail" = "Regenerate with pod cache clean --all";
+
+/* Gradle Scanner */
+"gradle.cache" = "Gradle Cache";
+"gradle.cache.detail" = "Build dependency cache (re-downloaded on build)";
+
+/* AI Tools Scanner */
+"ai.claude.code" = "Claude Code: %@";
+"ai.claude.code.detail" = "Worktrees and execution result temp data";
+"ai.claude.desktop" = "Claude Desktop Data";
+"ai.claude.desktop.detail" = "Conversation history, etc.";
+"ai.claude.update" = "Claude Desktop Update Cache";
+"ai.claude.update.detail" = "Update cache";
+"ai.cursor" = "Cursor Data";
+"ai.cursor.detail" = "Settings & extension data";
+
+/* System Cache Scanner */
+"cache.chrome" = "Google Chrome Cache";
+"cache.chrome.detail" = "Browser cache";
+"cache.homebrew" = "Homebrew Cache";
+"cache.homebrew.detail" = "Removable with brew cleanup";
+"cache.vscode" = "VS Code Update Cache";
+"cache.vscode.detail" = "Update cache";
+"cache.playwright" = "Playwright Browsers";
+"cache.playwright.detail" = "Test browser binaries";
+"cache.pip" = "pip Cache";
+"cache.pip.detail" = "Python package cache";
+
+/* Tmp File Scanner */
+"tmp.detail" = "Temporary file";
+
+/* APFS Snapshot Scanner */
+"apfs.snapshot" = "Snapshot: %@";
+"apfs.snapshot.detail" = "Requires sudo (command copied to clipboard)";

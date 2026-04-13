@@ -14,10 +14,10 @@ struct XcodeScanner: CategoryScanner {
         let xcodeBase = "\(home)/Library/Developer/Xcode"
 
         let targets: [(String, String, SafetyLevel, String)] = [
-            ("\(xcodeBase)/DerivedData", "Xcode DerivedData", .safe, "ビルドキャッシュ（ビルド時に再生成）"),
-            ("\(xcodeBase)/Archives", "Xcode Archives", .caution, "過去のアーカイブ（App Store提出済みなら不要）"),
-            ("\(xcodeBase)/iOS DeviceSupport", "iOS DeviceSupport", .caution, "デバイスシンボル（接続時に再DL）"),
-            ("\(home)/Library/Developer/CoreSimulator", "iOS Simulator", .caution, "シミュレータデータ"),
+            ("\(xcodeBase)/DerivedData", L("xcode.derived"), .safe, L("xcode.derived.detail")),
+            ("\(xcodeBase)/Archives", L("xcode.archives"), .caution, L("xcode.archives.detail")),
+            ("\(xcodeBase)/iOS DeviceSupport", L("xcode.device"), .caution, L("xcode.device.detail")),
+            ("\(home)/Library/Developer/CoreSimulator", L("xcode.simulator"), .caution, L("xcode.simulator.detail")),
         ]
 
         return targets.compactMap { path, name, safety, detail in

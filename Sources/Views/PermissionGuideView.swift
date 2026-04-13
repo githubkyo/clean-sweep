@@ -9,29 +9,29 @@ struct PermissionGuideView: View {
                 .font(.system(size: 48))
                 .foregroundStyle(.orange)
 
-            Text("フルディスクアクセスが必要です")
+            Text(L("permission.title"))
                 .font(.title2.bold())
 
-            Text("CleanSweepがシステムディレクトリ（/private/tmp、Xcodeキャッシュ等）をスキャンするには、フルディスクアクセス権限が必要です。")
+            Text(L("permission.description"))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
 
             VStack(alignment: .leading, spacing: 8) {
-                step(number: 1, text: "「システム設定」を開く")
-                step(number: 2, text: "「プライバシーとセキュリティ」→「フルディスクアクセス」")
-                step(number: 3, text: "「CleanSweep」をオンにする")
+                step(number: 1, text: L("permission.step1"))
+                step(number: 2, text: L("permission.step2"))
+                step(number: 3, text: L("permission.step3"))
             }
             .padding()
             .background(.background.secondary, in: RoundedRectangle(cornerRadius: 8))
 
             HStack(spacing: 12) {
-                Button("システム設定を開く") {
+                Button(L("permission.open")) {
                     openSystemSettings()
                 }
                 .buttonStyle(.borderedProminent)
 
-                Button("後で設定する") {
+                Button(L("permission.later")) {
                     isPresented = false
                 }
             }

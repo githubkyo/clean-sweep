@@ -3,11 +3,13 @@ import PackageDescription
 
 let package = Package(
     name: "CleanSweep",
+    defaultLocalization: "en",
     platforms: [.macOS(.v14)],
     targets: [
         .executableTarget(
             name: "CleanSweep",
-            path: "Sources"
+            path: "Sources",
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "CleanSweepTests",

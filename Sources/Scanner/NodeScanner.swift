@@ -14,11 +14,11 @@ struct NodeScanner: CategoryScanner {
         var items: [StorageItem] = []
 
         let targets: [(String, String, SafetyLevel, String)] = [
-            ("\(home)/.npm", "npm キャッシュ", .safe, "npm cache clean --force で再生成"),
-            ("\(home)/Library/Caches/Yarn", "Yarn キャッシュ", .safe, "yarn cache clean で再生成"),
-            ("\(home)/Library/pnpm", "pnpm ストア", .safe, "pnpm store prune で最適化"),
-            ("\(home)/Library/Caches/pnpm", "pnpm キャッシュ", .safe, "パッケージキャッシュ"),
-            ("\(home)/.nvm", "nvm (Node バージョン)", .caution, "未使用バージョンを削除可能"),
+            ("\(home)/.npm", L("node.npm"), .safe, L("node.npm.detail")),
+            ("\(home)/Library/Caches/Yarn", L("node.yarn"), .safe, L("node.yarn.detail")),
+            ("\(home)/Library/pnpm", L("node.pnpm.store"), .safe, L("node.pnpm.store.detail")),
+            ("\(home)/Library/Caches/pnpm", L("node.pnpm.cache"), .safe, L("node.pnpm.cache.detail")),
+            ("\(home)/.nvm", L("node.nvm"), .caution, L("node.nvm.detail")),
         ]
 
         for (path, name, safety, detail) in targets {
@@ -45,8 +45,8 @@ struct NodeScanner: CategoryScanner {
                         category: .nodePackages,
                         safety: isActive ? .caution : .safe,
                         detail: isActive
-                            ? "⚠️ プロセス稼働中 — 削除するとサービスが停止します"
-                            : "npm install / pnpm install で再生成"
+                            ? L("node.active.detail")
+                            : L("node.modules.detail")
                     ))
                 }
             }

@@ -138,9 +138,8 @@ struct ScannerTests {
             #expect(Bool(false), "Expected .dockerPrune")
         }
 
-        let diskImage = items.first { $0.name.contains("ディスクイメージ") }
+        let diskImage = items.first { $0.category == .docker && $0.safety == .dangerous }
         #expect(diskImage != nil)
-        #expect(diskImage!.safety == .dangerous)
     }
 
     @Test("DockerScanner Docker未起動で空")

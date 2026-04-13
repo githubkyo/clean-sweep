@@ -14,12 +14,12 @@ struct GradleScanner: CategoryScanner {
         let gradlePath = "\(home)/.gradle"
         guard let size = shell.directorySize(gradlePath), size > 100_000_000 else { return [] }
         return [StorageItem(
-            name: "Gradle キャッシュ",
+            name: L("gradle.cache"),
             path: gradlePath,
             size: size,
             category: .gradle,
             safety: .safe,
-            detail: "ビルド依存関係キャッシュ（ビルド時に再DL）"
+            detail: L("gradle.cache.detail")
         )]
     }
 }
